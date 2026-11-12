@@ -1,0 +1,21 @@
+name: Build and push image
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and push image to ttl.sh
+        run: |
+          IMAGE=ttl.sh/hfx2-c41f8a:24h
+          echo "building -> $IMAGE"
+          docker buildx build --platform linux/amd64 -t "$IMAGE" --push ./deploy
+          echo "IMAGE=$IMAGE"
